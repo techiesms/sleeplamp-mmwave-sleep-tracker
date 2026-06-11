@@ -1,0 +1,23 @@
+# ─── SleepLamp · never commit these ───────────────────────────
+
+# Private credentials (real WiFi name/password live here)
+secrets.h
+**/secrets.h
+
+# Arduino / build artifacts
+build/
+*.bin
+*.elf
+*.map
+*.hex
+*.o
+*.d
+.theia/
+.vscode/
+*.tmp
+history.csv
+
+# OS junk
+Thumbs.db
+desktop.ini
+.DS_Store
