@@ -5,7 +5,7 @@
 #include <WebServer.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
-#include "DFRobot_HumanDetection.h"
+#include "ShubhSensor.h"
 #include "config.h"
 
 // All telemetry: C1001 (radar) + DHT11
@@ -71,7 +71,7 @@ extern SensorData              g;
 extern LightState              light;
 extern AlarmState              alarmCfg;
 extern WebServer               server;
-extern DFRobot_HumanDetection  hu;
+extern ShubhSensor             hu;
 extern SemaphoreHandle_t       mux;
 extern char                    timeStr[6];   // "HH:MM"
 extern bool                    timeOk;

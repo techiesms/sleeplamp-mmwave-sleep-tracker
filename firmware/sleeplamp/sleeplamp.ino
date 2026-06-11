@@ -24,7 +24,7 @@ SensorData              g;
 LightState              light;
 AlarmState              alarmCfg;
 WebServer               server(80);
-DFRobot_HumanDetection  hu(&Serial1);
+ShubhSensor             hu(&Serial1);
 SemaphoreHandle_t       mux;
 char                    timeStr[6] = "--:--";
 bool                    timeOk = false;

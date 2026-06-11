@@ -258,9 +258,10 @@ the dashboard or power-cycle the radar's 5 V.
 ### 1. Install the toolchain
 - **Arduino IDE 2.x**
 - **esp32 board package 3.0.0+** (Boards Manager → "esp32" by Espressif)
-- The **patched** `DFRobot_HumanDetection` library — use the copy in
-  [`firmware/`](firmware/) / [`libraries/`](libraries/) (it adds non-blocking reads and
-  fixes a buffer-overflow crash on corrupt frames; the upstream version will crash).
+- **No sensor library to install** — the radar driver is bundled with the sketch as a
+  single file, [`firmware/sleeplamp/ShubhSensor.h`](firmware/sleeplamp/ShubhSensor.h).
+  It's the DFRobot C1001 driver merged into one header and patched (non-blocking cached
+  reads, crash fixes for corrupt frames). The sketch is fully self-contained.
 
 ### 2. Set your WiFi (kept off GitHub)
 ```bash
@@ -349,7 +350,8 @@ SleepLamp_Project/
    │  ├─ WebUI.ino            ← HTTP handlers + live JSON
    │  ├─ Settings.ino         ← persist lamp/alarm in NVS
    │  ├─ Provision.ino        ← WiFi portal, OTA update, factory reset
-   │  └─ page.h               ← the entire dashboard (HTML/CSS/JS, served from flash)
+   │  ├─ page.h               ← the entire dashboard (HTML/CSS/JS, served from flash)
+   │  └─ ShubhSensor.h        ← bundled single-file C1001 radar driver (no install needed)
    ├─ sleeplamp_core/         ← minimal serial-only vitals reader (sensor bring-up)
    ├─ c1001_s3_test/          ← minimal S3 vitals test
    ├─ c1001_uart_diag/        ← raw UART frame sniffer
@@ -371,8 +373,10 @@ SleepLamp_Project/
 
 ## Credits & license
 
-- **Radar driver:** [DFRobot_HumanDetection](https://github.com/DFRobot/DFRobot_HumanDetection)
-  (patched here for non-blocking reads + crash fixes), under its own license.
+- **Radar driver:** `ShubhSensor.h` — the C1001 driver merged into a single file and
+  patched (non-blocking cached reads + corrupt-frame crash fixes) by **Shubh Jaiswal**.
+  It is built on DFRobot's [DFRobot_HumanDetection](https://github.com/DFRobot/DFRobot_HumanDetection)
+  library (© 2010 DFRobot, MIT) — original copyright retained as the license requires.
 - **Sensor:** DFRobot C1001 / SEN0623 —
   [wiki](https://wiki.dfrobot.com/SKU_SEN0623_C1001_mmWave_Human_Detection_Sensor).
 - Built with the Arduino-ESP32 core.

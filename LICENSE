@@ -21,6 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ────────────────────────────────────────────────────────────────────────────
-Note: the bundled DFRobot_HumanDetection driver (firmware/ and libraries/) is
-a separate work by DFRobot, redistributed under its own license. See that
-library's headers for its terms.
+Note: the bundled radar driver (firmware/sleeplamp/ShubhSensor.h) is a merged,
+single-file, patched build maintained by Shubh Jaiswal, derived from DFRobot's
+DFRobot_HumanDetection library (Copyright (c) 2010 DFRobot Co.Ltd, MIT License).
+DFRobot's original copyright is retained in that file's header as the MIT
+License requires.
