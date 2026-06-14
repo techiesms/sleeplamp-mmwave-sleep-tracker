@@ -1,6 +1,6 @@
 /**
- * SleepLamp — contactless sleep lamp  | arduino-esp32 core 3.x
- * ESP32-S3 + C1001 mmWave radar + DHT11 + common-cathode RGB
+ * SleepLamp — contactless sleep lamp  | arduino-esp32 core 3.1+
+ * ESP32-S3 + C1001 mmWave radar + DHT11 + NeoPixel ring + TTP223 touch + Matter
  *
  *  Architecture (deliberate):
  *   - setup() brings up WiFi + web FIRST. The radar is initialised inside
@@ -31,6 +31,8 @@ bool                    timeOk = false;
 volatile bool           g_sensorReset = false;
 volatile bool           radarOk = false;
 volatile bool           g_endSession = false;
+volatile bool           g_alarmStop = false;
+volatile bool           g_lightDirty = false;
 SleepLive               live;
 NightReport             lastReport;
 SessSample              sessBuf[SESS_MAX];
@@ -73,6 +75,7 @@ void setup() {
 
   lightBegin();
   lightBootTest();
+  touchBegin();
   storeBegin();
   settingsBegin();   // restore saved lamp + alarm settings
 
@@ -116,6 +119,11 @@ void setup() {
   server.begin();
   Serial.println("[HTTP] dashboard up (works even while radar is still booting)");
 
+  // Matter joins the smart-home fabric over the WiFi we just brought up. Skipped
+  // in AP-setup mode (no station WiFi yet) — it starts on the next boot once
+  // home WiFi is configured.
+  if (WiFi.status() == WL_CONNECTED) matterBegin();
+
   xTaskCreatePinnedToCore(sensorTask, "radar", 8192, nullptr, 2, nullptr, 0);
   xTaskCreatePinnedToCore(envTask,    "env",   4096, nullptr, 1, nullptr, 1);
   Serial.println("[TASKS] radar(core0) + env(core1) started");
@@ -123,6 +131,11 @@ void setup() {
 
 void loop() {
   server.handleClient();
+  handleTouch();                                  // poll the TTP223 every loop (snappy)
+  matterLoop();                                   // Matter pairing-status prints
+  if (g_lightDirty) {                             // a smart-home app changed the lamp
+    g_lightDirty = false; lightApply(); settingsSaveLight();
+  }
   static uint32_t tTick = 0, tPrint = 0, tWifi = 0;
   uint32_t now = millis();
   if (now - tTick > 1000) { tTick = now; if (!alarmCheck()) { lightAuto(); lightApply(); } }

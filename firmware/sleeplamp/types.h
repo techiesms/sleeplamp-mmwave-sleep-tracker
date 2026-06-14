@@ -78,6 +78,8 @@ extern bool                    timeOk;
 extern volatile bool           g_sensorReset; // web -> sensor task: please reset the radar
 extern volatile bool           radarOk;       // sensor task -> world: radar link healthy
 extern volatile bool           g_endSession;  // web -> engine: end session, build report
+extern volatile bool           g_alarmStop;   // touch/web -> alarm: stop firing now
+extern volatile bool           g_lightDirty;  // Matter -> loop: a hub command changed the lamp, re-apply
 extern SleepLive               live;          // engine -> world (guarded by mux)
 extern NightReport             lastReport;    // most recent saved session (guarded by mux)
 extern SessSample              sessBuf[SESS_MAX];
@@ -93,20 +95,25 @@ void   lightSunrise(float p); // Light.ino
 void   lightBootTest();       // Light.ino
 void   timeBegin();           // Alarm.ino
 bool   alarmCheck();          // Alarm.ino
+void   touchBegin();          // Touch.ino  (TTP223 init)
+void   handleTouch();         // Touch.ino  (poll + act, called every loop)
+void   matterBegin();         // Matter.ino (start Matter once WiFi is up)
+void   matterLoop();          // Matter.ino (pairing-status prints, called every loop)
+void   matterReflect(int r, int g, int b);  // Matter.ino (push lamp state -> hub)
 void   storeBegin();          // Store.ino
 void   reportSave(NightReport& r);  // Store.ino — stamp + append to history
 void   reportLoadLast();      // Store.ino — restore last report at boot
 void   sleepFeed(const SensorData& s, SleepLive& outLive,
                  NightReport& outRep, bool& repReady);  // Sleep.ino
-void   handleData();          // WebUI.ino
-void   handleRoot();          // WebUI.ino
-void   handleLight();         // WebUI.ino
-void   handleAlarm();         // WebUI.ino
+void   handleData();          // Api.ino    (live JSON snapshot)
+void   handleSession();       // Api.ino    (tonight's stage timeline)
+void   handleLight();         // Control.ino
+void   handleAlarm();         // Control.ino
+void   handleReport();        // Control.ino (/api/report?end=1 -> end session now)
+void   handleSensor();        // Control.ino (radar recalibrate)
 void   handleHistory();       // Store.ino
 void   handleExport();        // Store.ino  (download history.csv)
-void   handleSensor();        // WebUI.ino  (radar recalibrate)
-void   handleReport();        // WebUI.ino  (/api/report?end=1 -> end session now)
-void   handleSession();       // WebUI.ino  (tonight's stage timeline from device)
+void   handleRoot();          // WebUI.ino  (dashboard page)
 void   handleManifest();      // WebUI.ino  (PWA)
 void   settingsBegin();       // Settings.ino (load light+alarm from NVS)
 void   settingsSaveLight();   // Settings.ino

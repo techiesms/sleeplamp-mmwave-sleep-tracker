@@ -1,15 +1,26 @@
-// SleepLamp · Light.ino — common-cathode RGB lamp (3.x LEDC API) + adaptive + sunrise
+// SleepLamp · Light.ino — NeoPixel ring lamp (WS2812/SK6812) + adaptive + sunrise.
+// The whole ring shows one colour (a lamp, not an animation). All output goes
+// through writeRGB()/writeScaled(), so the adaptive + sunrise logic is unchanged
+// from the old single-LED version — only the driver underneath is different.
+//
+// Library: Adafruit NeoPixel (>= 1.12.3; uses the ESP32-S3 RMT peripheral, which
+// is free here — the radar is on UART). All calls run from loop()/core 1.
 #include "types.h"
 #include "config.h"
+#include <Adafruit_NeoPixel.h>
 
-// raw 0..255 per channel (handles common-cathode vs anode)
+#if USE_RGB
+static Adafruit_NeoPixel ring(NEOPIXEL_COUNT, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+#endif
+
+// paint the entire ring one colour (raw 0..255 per channel)
 static void writeRGB(int r, int g, int b) {
 #if USE_RGB
-  r = constrain(r,0,255); g = constrain(g,0,255); b = constrain(b,0,255);
-  if (!RGB_COMMON_CATHODE) { r = 255 - r; g = 255 - g; b = 255 - b; }
-  ledcWrite(RGB_R_PIN, r);            // 3.x: address by PIN, not channel
-  ledcWrite(RGB_G_PIN, g);
-  ledcWrite(RGB_B_PIN, b);
+  r = constrain(r, 0, 255); g = constrain(g, 0, 255); b = constrain(b, 0, 255);
+  uint32_t c = ring.Color(r, g, b);
+  for (int i = 0; i < NEOPIXEL_COUNT; i++) ring.setPixelColor(i, c);
+  ring.show();
+  matterReflect(r, g, b);          // keep the smart-home app in sync (no-op if Matter off)
 #endif
 }
 static void writeScaled(int r, int g, int b, int bright) {
@@ -18,10 +29,10 @@ static void writeScaled(int r, int g, int b, int bright) {
 
 void lightBegin() {
 #if USE_RGB
-  ledcAttach(RGB_R_PIN, 5000, 8);    // 3.x: ledcAttach(pin, freq, resolution)
-  ledcAttach(RGB_G_PIN, 5000, 8);
-  ledcAttach(RGB_B_PIN, 5000, 8);
-  writeRGB(0,0,0);
+  ring.begin();
+  ring.setBrightness(255);      // we scale colours ourselves in writeScaled()
+  ring.clear();
+  ring.show();
 #endif
 }
 
@@ -59,11 +70,11 @@ void lightSunrise(float p) {
   writeScaled(r, g, b, br);
 }
 
-// boot wiring check: shows pure R, G, B so you can verify pins + cathode/anode
+// boot wiring check: shows pure R, G, B so you can verify DIN + colour order
 void lightBootTest() {
 #if USE_RGB && RGB_BOOT_TEST
-  Serial.println(F("[LIGHT] boot test -> RED, GREEN, BLUE (0.8s each)."));
-  Serial.println(F("        Wrong colour order? swap R/G/B pins. LED ON when it says OFF? set RGB_COMMON_CATHODE 0."));
+  Serial.println(F("[LIGHT] boot test -> RED, GREEN, BLUE (0.8s each) on the ring."));
+  Serial.println(F("        Colours wrong order? change NEO_GRB in Light.ino. Nothing lights? check DIN pin / 5V."));
   writeRGB(255,0,0); Serial.println(F("  RED"));   delay(800);
   writeRGB(0,255,0); Serial.println(F("  GREEN")); delay(800);
   writeRGB(0,0,255); Serial.println(F("  BLUE"));  delay(800);

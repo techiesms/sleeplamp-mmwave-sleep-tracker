@@ -78,8 +78,8 @@ void reportSave(NightReport& r) {
            r.avgHR, r.avgBR, r.turns, r.apnea, r.onsetMin, r.wakes, r.bedMin);
   f.close();
   if (histCount() > HIST_MAX) histDropRow(0);   // cap: drop the oldest
-  Serial.printf("[FS] session saved: score=%d sleep=%d min (in bed %d)\n",
-                r.score, r.sleepMin, r.bedMin);
+  Serial.printf("[FS] session saved: score=%d sleep=%d min (in bed %d) -- %d/%d sessions stored\n",
+                r.score, r.sleepMin, r.bedMin, histCount(), HIST_MAX);
 }
 
 // parse the newest history line back into lastReport (boot + after deletes).

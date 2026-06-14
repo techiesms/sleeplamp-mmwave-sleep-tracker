@@ -50,9 +50,11 @@ bool alarmCheck() {
   else                          outOfBedSince = 0;
   bool stood   = outOfBedSince && (millis() - outOfBedSince > 3000);
   bool timeout = (millis() - fireStartMs > (uint32_t)(SUNRISE_SEC + 600) * 1000UL);
+  bool touched = g_alarmStop;       // a tap on the TTP223 dismisses the alarm
 
-  if (stood || timeout) {
+  if (stood || timeout || touched) {
     alarmCfg.firing = false;
+    g_alarmStop = false;
     lastFireDay = t.tm_yday;        // one fire per day
     Serial.println(F("[ALARM] stopped"));
   }

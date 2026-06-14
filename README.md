@@ -102,16 +102,26 @@ has a colored score badge, a *Today/Yesterday* tag, a one-line summary, and a
 deep/light/awake composition bar. **Tap to expand for full detail and a per-session
 delete button.** Download everything as CSV, or clear all.
 
-### 💡 Adaptive circadian lamp
-The built-in RGB lamp reacts to your sleep state automatically: **warm** while you're up,
-**dim amber** when you're in bed but awake, **off** once you're asleep, and a low amber
-**night-light** if you get up mid-sleep (a 3 a.m. bathroom trip). Or take manual control
-with color presets and a brightness slider.
+### 💡 Adaptive circadian lamp (12-LED NeoPixel ring)
+The ring reacts to your sleep state automatically: **warm** while you're up, **dim amber**
+when you're in bed but awake, **off** once you're asleep, and a low amber **night-light**
+if you get up mid-sleep (a 3 a.m. bathroom trip). Or take manual control with color presets
+and a brightness slider.
+
+### 👆 Tap to control (TTP223 touch)
+A capacitive touch pad on the lamp: **tap to toggle** the light on/off, and **tap to
+dismiss** the sunrise alarm while it's ringing — no phone needed.
 
 ### ⏰ Smart-wake sunrise alarm
 Set a wake time and a window (say 30 min). SleepLamp watches for **light sleep** inside
 that window and starts a gradual **sunrise light ramp** to wake you gently at the easiest
-moment — never yanking you out of deep sleep. Get out of bed and it stops itself.
+moment — never yanking you out of deep sleep. Get out of bed (or tap the lamp) and it stops.
+
+### 🏠 Matter — works with Apple Home, Google & Alexa
+The lamp is a standard **Matter Color Light**. Scan the pairing **QR code printed to the
+serial monitor** to add it to any Matter smart-home app, then control color/brightness by
+voice or app. State stays in sync both ways — change it by touch or on the dashboard and
+your smart-home app updates too.
 
 ### 🪐 "Deep-space universe" dashboard
 A single self-contained page served from the ESP32: nebula glow, drifting starfields,
@@ -215,8 +225,9 @@ radar frames — which is why the junk-data problem is gone for good.
 | **ESP32-S3-WROOM-1 N16R8** dev board | 16 MB flash, 8 MB PSRAM. The brains. |
 | **DFRobot C1001 / SEN0623** 60 GHz mmWave sensor | The contactless radar. |
 | **DHT11** temp/humidity sensor | Bedroom climate (bit-banged, no library). |
-| **Common-cathode RGB LED** (+ 3× ~330 Ω resistors) | The adaptive lamp. |
-| **External 5 V supply** (≥1 A, clean) | **Required** — see the gotcha below. |
+| **NeoPixel ring — 12× WS2812/SK6812** | The adaptive lamp (one data wire). |
+| **TTP223 capacitive touch module** | Tap to toggle the lamp / dismiss the alarm. |
+| **External 5 V supply** (≥1.5 A, clean) | **Required** — radar + ring; see the gotcha below. |
 
 ### Wiring
 
@@ -224,18 +235,22 @@ radar frames — which is why the junk-data problem is gone for good.
 |---|:--:|---|
 | C1001 **TX** | **GPIO 18** | ESP32-S3 RX |
 | C1001 **RX** | **GPIO 17** | ESP32-S3 TX |
-| C1001 **VCC** | — | **external 5 V** (not the board's USB 5 V) |
-| C1001 **GND** | — | common ground |
+| C1001 **VCC / GND** | — | **external 5 V** (not the board's USB 5 V) / common GND |
 | DHT11 **DATA** | **GPIO 4** | (VCC 3V3, GND) |
-| RGB **R / G / B** | **GPIO 5 / 6 / 7** | via ~330 Ω each, common → GND |
+| NeoPixel ring **DIN** | **GPIO 5** | 5V + GND from the **external supply** (≈0.7 A @ 12 px) |
+| TTP223 **OUT** | **GPIO 6** | (VCC 3V3, GND) |
+
+All pins are `#define`s in [config.h](firmware/sleeplamp/config.h) — change them there if you wire differently.
 
 ```mermaid
 flowchart LR
     psu["External 5V PSU"] ==> radar["C1001 radar"]
+    psu ==> ring["NeoPixel ring (12)"]
     radar -- "TX → GPIO18" --> esp["ESP32-S3"]
     esp -- "GPIO17 → RX" --> radar
     esp -- "GPIO4" --- dht["DHT11"]
-    esp -- "GPIO5/6/7 + 330Ω" --> rgb["RGB LED"]
+    esp -- "GPIO5 (DIN)" --> ring
+    esp -- "GPIO6" --- touch["TTP223 touch"]
     esp -. "common GND" .- psu
 ```
 
@@ -257,7 +272,10 @@ the dashboard or power-cycle the radar's 5 V.
 
 ### 1. Install the toolchain
 - **Arduino IDE 2.x**
-- **esp32 board package 3.0.0+** (Boards Manager → "esp32" by Espressif)
+- **esp32 board package 3.1.0+** (Boards Manager → "esp32" by Espressif) — 3.1+ is
+  **required for Matter**. (Set `ENABLE_MATTER 0` in config.h to build on 3.0.x without it.)
+- **Adafruit NeoPixel** library (Library Manager → "Adafruit NeoPixel", **≥ 1.12.3**,
+  tested 1.15.5) — drives the ring.
 - **No sensor library to install** — the radar driver is bundled with the sketch as a
   single file, [`firmware/sleeplamp/ShubhSensor.h`](firmware/sleeplamp/ShubhSensor.h).
   It's the DFRobot C1001 driver merged into one header and patched (non-blocking cached
@@ -277,7 +295,8 @@ password `sleeplamp123`, at `http://192.168.4.1/wifi`.)*
 |---|---|
 | Board | **ESP32S3 Dev Module** |
 | Partition Scheme | **Huge APP (3 MB No OTA / 1 MB SPIFFS)** |
-| PSRAM | Disabled (not needed yet — see [Roadmap](#roadmap)) |
+| PSRAM | Disabled (enable **OPI PSRAM** only if Matter runs low on heap) |
+| Erase All Flash Before Sketch Upload | **Enabled for the first Matter flash** (clears stale Matter/WiFi state — note it also wipes saved sleep history) |
 
 ### 4. Flash & open
 Open `firmware/sleeplamp/sleeplamp.ino`, upload, then browse to
@@ -338,20 +357,24 @@ SleepLamp_Project/
 └─ firmware/
    ├─ sleeplamp/              ← ★ the product firmware (open sleeplamp.ino)
    │  ├─ sleeplamp.ino        ← globals, setup(), loop(), telemetry
-   │  ├─ config.h             ← pins, engine constants, history cap, version
+   │  ├─ config.h             ← pins, engine constants, history cap, feature flags
    │  ├─ secrets.example.h    ← copy → secrets.h (git-ignored) for WiFi
-   │  ├─ types.h              ← shared data model + globals
-   │  ├─ Sleep.ino            ← the sleep-staging engine
+   │  ├─ types.h              ← shared data model + globals + prototypes
+   │  ├─ ShubhSensor.h        ← bundled single-file C1001 radar driver (no install needed)
    │  ├─ Sensor.ino           ← C1001 radar task (core 0) + session recorder
+   │  ├─ Sleep.ino            ← the sleep-staging engine
    │  ├─ Env.ino              ← DHT11 task (core 1)
-   │  ├─ Light.ino            ← adaptive RGB lamp + sunrise
+   │  ├─ Light.ino            ← NeoPixel ring lamp: adaptive + sunrise
+   │  ├─ Touch.ino            ← TTP223 touch button
    │  ├─ Alarm.ino            ← NTP time + smart-wake alarm
+   │  ├─ Matter.ino           ← Matter color light (smart-home pairing)
    │  ├─ Store.ino            ← history (save / list / delete / export)
-   │  ├─ WebUI.ino            ← HTTP handlers + live JSON
+   │  ├─ Api.ino              ← read-only JSON endpoints (data, session)
+   │  ├─ Control.ino          ← control endpoints (light, alarm, report, sensor)
+   │  ├─ WebUI.ino            ← serves the dashboard page + PWA manifest
    │  ├─ Settings.ino         ← persist lamp/alarm in NVS
    │  ├─ Provision.ino        ← WiFi portal, OTA update, factory reset
-   │  ├─ page.h               ← the entire dashboard (HTML/CSS/JS, served from flash)
-   │  └─ ShubhSensor.h        ← bundled single-file C1001 radar driver (no install needed)
+   │  └─ page_head/css/body/js.h ← dashboard split into 4 streamed PROGMEM parts
    ├─ sleeplamp_core/         ← minimal serial-only vitals reader (sensor bring-up)
    ├─ c1001_s3_test/          ← minimal S3 vitals test
    ├─ c1001_uart_diag/        ← raw UART frame sniffer
@@ -362,11 +385,13 @@ SleepLamp_Project/
 
 ## Roadmap
 
+- [x] **NeoPixel ring lamp** (12× WS2812) with adaptive + sunrise lighting.
+- [x] **Touch control** (TTP223).
+- [x] **Matter** color light — pair with Apple Home / Google / Alexa.
 - [ ] **Snore detection** — I²S MEMS mic + a small TensorFlow Lite Micro model
-      *(this is the feature that will finally justify turning on the S3's PSRAM)*.
+      *(the feature that will finally justify turning on the S3's PSRAM)*.
 - [ ] Ambient light sensor (BH1750) for smarter auto-brightness.
 - [ ] Native mobile app + optional cloud sync.
-- [ ] Matter support (needs esp32 core 3.1+).
 - [ ] Finished 3D-printed enclosure.
 
 ---
