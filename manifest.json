@@ -10,7 +10,7 @@
 
       "parts": [
         {
-          "path": "firmware/sleeplamp.ino.bootloader.bin",
+          "path": "firmware/sleeplamp.ino.bootloader.bin", 
           "offset": "0x0"
         },
         {
