@@ -1,256 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sleep Lamp — Firmware Flasher | techiesms</title>
+<meta name="description" content="Flash Sleep Lamp firmware to your ESP32-S3 board directly from Chrome or Edge. No software installation required." />
 
-<meta charset="UTF-8">
+<!-- ESP Web Tools (pinned version, loaded as a module) -->
+<script type="module" src="https://unpkg.com/esp-web-tools@10.1.1/dist/web/install-button.js"></script>
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Sleep Lamp Firmware Installer</title>
-
-<meta
-name="description"
-content="Install Sleep Lamp firmware directly from your browser using ESP Web Tools.">
-
-<meta
-name="theme-color"
-content="#111827">
-
-<link
-rel="icon"
-href="assets/favicon.png">
-
-<link
-rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link
-rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-rel="stylesheet">
-
-<script
-type="module"
-src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module">
-</script>
-
-<style>
-
-/* CSS WILL BE PROVIDED IN PART 2 */
-
-</style>
-
+<link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<div class="container">
-
-<header>
-
-<div class="brand">
-
-<h1>Sleep Lamp</h1>
-
-<p>
-Browser-Based Firmware Installer
-</p>
-
-</div>
-
-</header>
-
-<main>
-
-<section class="hero">
-
-<h2>
-
-Flash Firmware in Minutes
-
-</h2>
-
-<p>
-
-Install the latest Sleep Lamp firmware directly from Chrome or Microsoft Edge.
-
-No desktop software required.
-
-</p>
-
-</section>
-
-<section class="card">
-
-<h3>Supported Hardware</h3>
-
-<div class="specs">
-
-<div class="spec">
-
-<span>Board</span>
-
-<strong>ESP32-S3 N16R8 Module</strong>
-
-</div>
-
-<div class="spec">
-
-<span>Chip Family</span>
-
-<strong>ESP32-S3</strong>
-
-</div>
-
-<div class="spec">
-
-<span>Creator</span>
-
-<strong>techiesms</strong>
-
-</div>
-
-</div>
-
-</section>
-
-<section class="card install">
-
-<h3>Flash Firmware</h3>
-
-<p>
-
-Connect your ESP32-S3 board using a USB data cable and click the button below.
-
-</p>
-
-<!-- IMPORTANT -->
-
-<esp-web-install-button manifest="manifest.json">
-
-<button slot="activate">
-
-🚀 Flash Firmware
-
-</button>
-
-</esp-web-install-button>
-
-<p class="small">
-
-Google Chrome or Microsoft Edge required.
-
-</p>
-
-</section>
-
-<section class="card">
-
-<h3>Installation Steps</h3>
-
-<ol>
-
-<li>Connect the ESP32-S3 using a USB data cable.</li>
-
-<li>Close Arduino IDE, PlatformIO or Serial Monitor.</li>
-
-<li>Click Flash Firmware.</li>
-
-<li>Select the correct COM Port.</li>
-
-<li>Wait until flashing completes.</li>
-
-<li>Device will reboot automatically.</li>
-
-</ol>
-
-</section>
-
-<section class="card warning">
-
-<h3>Important</h3>
-
-<ul>
-
-<li>Use a USB DATA cable.</li>
-
-<li>Remove any application using the COM port.</li>
-
-<li>Do not disconnect power while flashing.</li>
-
-<li>Use the latest Chrome or Edge browser.</li>
-
-</ul>
-
-</section>
-
-<section class="card">
-
-<h3>Tutorial Video</h3>
-
-<p>
-
-Watch the complete installation guide.
-
-</p>
-
-<a
-
-href="#"
-
-class="video-button"
-
-target="_blank">
-
-▶ Watch Tutorial
-
-</a>
-
-</section>
-
-<section class="card">
-
-<h3>Troubleshooting</h3>
-
-<ul>
-
-<li>Board not detected</li>
-
-<li>Serial port unavailable</li>
-
-<li>Failed to connect</li>
-
-<li>Failed to download manifest</li>
-
-<li>USB driver missing</li>
-
-<li>Browser unsupported</li>
-
-</ul>
-
-</section>
-
-</main>
-
-<footer>
-
-<p>
-
-© 2026 techiesms
-
-</p>
-
-</footer>
-
-</div>
+  <div class="glow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="https://techiesms.com" target="_blank" rel="noopener">
+        <span class="brand-mark" aria-hidden="true"></span>
+        techiesms
+      </a>
+      <a class="nav-link" href="https://youtube.com" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="eyebrow">Firmware Flasher</span>
+      <h1>Sleep&nbsp;Lamp</h1>
+      <p class="subtitle">Flash your Sleep Lamp firmware straight from the browser. Plug in, pick a port, done — no drivers, no IDE, no command line.</p>
+
+      <div class="board-chip">
+        <span class="dot"></span>
+        Built for ESP32‑S3 N16R8
+      </div>
+
+      <div class="cta-row">
+        <esp-web-install-button manifest="manifest.json">
+          <button slot="activate" class="flash-btn">
+            <svg class="flash-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" fill="currentColor"/>
+            </svg>
+            Flash Firmware
+          </button>
+          <span slot="unsupported" class="unsupported-msg">
+            Your browser can't flash firmware. Please open this page in <strong>Chrome</strong> or <strong>Edge</strong> on a desktop computer.
+          </span>
+          <span slot="not-allowed" class="unsupported-msg">
+            This page needs to be served over <strong>HTTPS</strong> to flash firmware. GitHub Pages does this automatically.
+          </span>
+        </esp-web-install-button>
+
+        <a class="tutorial-btn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg>
+          Watch Tutorial
+        </a>
+      </div>
+    </section>
+
+    <!-- BOARD INFO -->
+    <section class="card">
+      <h2>Supported hardware</h2>
+      <div class="spec-grid">
+        <div class="spec">
+          <span class="spec-label">Board</span>
+          <span class="spec-value">ESP32‑S3 N16R8 Module</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Chip family</span>
+          <span class="spec-value">ESP32‑S3</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Flash</span>
+          <span class="spec-value">16 MB</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">PSRAM</span>
+          <span class="spec-value">8 MB (Octal)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="card">
+      <h2>How to flash</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-num">01</span>
+          <div>
+            <h3>Connect your board</h3>
+            <p>Plug the Sleep Lamp board into your computer with a data‑capable USB‑C cable. Charge‑only cables won't work.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">02</span>
+          <div>
+            <h3>Click Flash Firmware</h3>
+            <p>Use the button above in Chrome or Edge. A browser panel will ask you to pick a serial port.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">03</span>
+          <div>
+            <h3>Select the port</h3>
+            <p>Choose the entry that matches your board — usually named <code>USB Serial</code> or <code>CP210x</code> / <code>CH340</code>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">04</span>
+          <div>
+            <h3>Wait for flashing to finish</h3>
+            <p>Keep the board connected until the progress bar completes. This takes 30–90 seconds.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">05</span>
+          <div>
+            <h3>Reboot and enjoy</h3>
+            <p>The board restarts automatically once flashing finishes. Sleep Lamp is ready to use.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- WARNING -->
+    <section class="card warning-card">
+      <h2>Before you flash</h2>
+      <ul class="warning-list">
+        <li>Flashing <strong>erases existing firmware</strong> on the board. Back up anything you need first.</li>
+        <li>Don't unplug the USB cable or close this tab while flashing is in progress.</li>
+        <li>Only one program can use the serial port at a time — close the Arduino IDE / Serial Monitor before flashing.</li>
+      </ul>
+    </section>
+
+    <!-- BROWSER + DRIVERS -->
+    <section class="card">
+      <h2>Browser &amp; driver requirements</h2>
+      <div class="two-col">
+        <div>
+          <h3>Supported browsers</h3>
+          <p>Sleep Lamp's flasher uses <strong>Web Serial</strong>, supported on:</p>
+          <ul class="plain-list">
+            <li>Google Chrome 89+ (Windows, macOS, Linux, ChromeOS)</li>
+            <li>Microsoft Edge 89+ (Windows, macOS)</li>
+          </ul>
+          <p class="muted-note">Safari, Firefox, and all mobile browsers are not supported — Web Serial isn't available there.</p>
+        </div>
+        <div>
+          <h3>USB drivers</h3>
+          <p>Most Sleep Lamp boards use a <strong>CP2102</strong> or <strong>CH340</strong> USB‑to‑serial chip. If the board doesn't show up as a serial port:</p>
+          <ul class="plain-list">
+            <li><a href="https://www.silabs.com/developer-tools/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">CP210x driver (Silicon Labs)</a></li>
+            <li><a href="https://www.wch.cn/download/CH341SER_EXE.html" target="_blank" rel="noopener">CH340 driver (WCH)</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TROUBLESHOOTING -->
+    <section class="card">
+      <h2>Troubleshooting</h2>
+
+      <details class="faq">
+        <summary>“Failed to download manifest”</summary>
+        <p>This means the browser can't reach <code>manifest.json</code>. Check that:</p>
+        <ul class="plain-list">
+          <li>The file is named exactly <code>manifest.json</code> and sits next to <code>index.html</code>.</li>
+          <li>GitHub Pages has finished deploying (check the Actions tab for a green checkmark).</li>
+          <li>You're opening the <em>Pages URL</em>, not the raw GitHub file view.</li>
+        </ul>
+      </details>
+
+      <details class="faq">
+        <summary>No serial port shows up</summary>
+        <ul class="plain-list">
+          <li>Try a different USB cable — many cables are charge‑only.</li>
+          <li>Install the CP210x or CH340 driver (see above), then reconnect the board.</li>
+          <li>Close any other program (Arduino IDE, PlatformIO, Serial Monitor) that might be holding the port open.</li>
+          <li>Try a different USB port, ideally directly on the computer rather than through a hub.</li>
+        </ul>
+      </details>
+
+      <details class="faq">
+        <summary>Flashing fails partway through</summary>
+        <ul class="plain-list">
+          <li>Hold the board's <strong>BOOT</strong> button while clicking Flash Firmware, release once flashing starts.</li>
+          <li>Lower the USB cable length — long or poor‑quality cables cause dropouts.</li>
+          <li>Try a different USB port or computer to rule out a power issue.</li>
+        </ul>
+      </details>
+
+      <details class="faq">
+        <summary>GitHub Pages shows a 404</summary>
+        <ul class="plain-list">
+          <li>Confirm Pages is enabled under <strong>Settings → Pages</strong> and points at the correct branch/folder.</li>
+          <li><code>index.html</code> must be in the repository root (or the folder you selected as the Pages source).</li>
+          <li>Wait 1–2 minutes after enabling Pages — the first deploy takes a moment.</li>
+        </ul>
+      </details>
+
+      <details class="faq">
+        <summary>Manually entering bootloader mode</summary>
+        <p>If auto‑reset doesn't work on your specific board revision:</p>
+        <ul class="plain-list">
+          <li>Hold <strong>BOOT</strong>, tap <strong>RESET</strong> once, then release <strong>BOOT</strong>.</li>
+          <li>The board is now in download mode — click Flash Firmware while it stays connected.</li>
+        </ul>
+      </details>
+
+      <details class="faq">
+        <summary>Verifying BIN files are accessible online</summary>
+        <p>Open each file's URL directly in the browser, e.g.:</p>
+        <p><code>https://&lt;username&gt;.github.io/&lt;repo&gt;/firmware/sleeplamp.ino.bin</code></p>
+        <p>It should prompt a download or show binary data — not a 404 page.</p>
+      </details>
+
+      <details class="faq">
+        <summary>Clearing browser cache issues</summary>
+        <p>If you updated the firmware but the page still installs the old version, hard‑refresh with <code>Ctrl/Cmd + Shift + R</code>, or open the page in an incognito window.</p>
+      </details>
+    </section>
+
+    <!-- MANUAL FLASH -->
+    <section class="card">
+      <h2>Manual flashing (esptool)</h2>
+      <p>If you'd rather flash from a terminal, or the web flasher isn't working on your setup:</p>
+      <pre class="code-block"><code>pip install esptool
+
+esptool.py --chip esp32s3 --port COM5 --baud 460800 write_flash ^
+  0x0     sleeplamp.ino.bootloader.bin ^
+  0x8000  sleeplamp.ino.partitions.bin ^
+  0xe000  boot_app0.bin ^
+  0x10000 sleeplamp.ino.bin</code></pre>
+      <p class="muted-note">Replace <code>COM5</code> with your board's port (<code>/dev/tty.usbserial-*</code> on macOS, <code>/dev/ttyUSB0</code> on Linux).</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>Built by <a href="https://techiesms.com" target="_blank" rel="noopener">techiesms</a> — electronics, IoT &amp; embedded projects.</p>
+      <p class="muted-note">Sleep Lamp firmware flasher · powered by <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener">ESP Web Tools</a></p>
+    </div>
+  </footer>
 
 </body>
-
 </html>
