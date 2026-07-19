@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Sleep Lamp Firmware Installer</title>
+
+<meta
+name="description"
+content="Install Sleep Lamp firmware directly from your browser using ESP Web Tools.">
+
+<meta
+name="theme-color"
+content="#111827">
+
+<link
+rel="icon"
+href="assets/favicon.png">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<script
+type="module"
+src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module">
+</script>
+
+<style>
+
+/* CSS WILL BE PROVIDED IN PART 2 */
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<div class="brand">
+
+<h1>Sleep Lamp</h1>
+
+<p>
+Browser-Based Firmware Installer
+</p>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+<h2>
+
+Flash Firmware in Minutes
+
+</h2>
+
+<p>
+
+Install the latest Sleep Lamp firmware directly from Chrome or Microsoft Edge.
+
+No desktop software required.
+
+</p>
+
+</section>
+
+<section class="card">
+
+<h3>Supported Hardware</h3>
+
+<div class="specs">
+
+<div class="spec">
+
+<span>Board</span>
+
+<strong>ESP32-S3 N16R8 Module</strong>
+
+</div>
+
+<div class="spec">
+
+<span>Chip Family</span>
+
+<strong>ESP32-S3</strong>
+
+</div>
+
+<div class="spec">
+
+<span>Creator</span>
+
+<strong>techiesms</strong>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="card install">
+
+<h3>Flash Firmware</h3>
+
+<p>
+
+Connect your ESP32-S3 board using a USB data cable and click the button below.
+
+</p>
+
+<!-- IMPORTANT -->
+
+<esp-web-install-button manifest="manifest.json">
+
+<button slot="activate">
+
+🚀 Flash Firmware
+
+</button>
+
+</esp-web-install-button>
+
+<p class="small">
+
+Google Chrome or Microsoft Edge required.
+
+</p>
+
+</section>
+
+<section class="card">
+
+<h3>Installation Steps</h3>
+
+<ol>
+
+<li>Connect the ESP32-S3 using a USB data cable.</li>
+
+<li>Close Arduino IDE, PlatformIO or Serial Monitor.</li>
+
+<li>Click Flash Firmware.</li>
+
+<li>Select the correct COM Port.</li>
+
+<li>Wait until flashing completes.</li>
+
+<li>Device will reboot automatically.</li>
+
+</ol>
+
+</section>
+
+<section class="card warning">
+
+<h3>Important</h3>
+
+<ul>
+
+<li>Use a USB DATA cable.</li>
+
+<li>Remove any application using the COM port.</li>
+
+<li>Do not disconnect power while flashing.</li>
+
+<li>Use the latest Chrome or Edge browser.</li>
+
+</ul>
+
+</section>
+
+<section class="card">
+
+<h3>Tutorial Video</h3>
+
+<p>
+
+Watch the complete installation guide.
+
+</p>
+
+<a
+
+href="#"
+
+class="video-button"
+
+target="_blank">
+
+▶ Watch Tutorial
+
+</a>
+
+</section>
+
+<section class="card">
+
+<h3>Troubleshooting</h3>
+
+<ul>
+
+<li>Board not detected</li>
+
+<li>Serial port unavailable</li>
+
+<li>Failed to connect</li>
+
+<li>Failed to download manifest</li>
+
+<li>USB driver missing</li>
+
+<li>Browser unsupported</li>
+
+</ul>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+
+© 2026 techiesms
+
+</p>
+
+</footer>
+
+</div>
+
+</body>
+
+</html>
