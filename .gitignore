@@ -6,7 +6,6 @@ secrets.h
 
 # Arduino / build artifacts
 build/
-*.bin
 *.elf
 *.map
 *.hex
