@@ -1,0 +1,395 @@
+/* ============================================
+   Sleep Lamp Flasher — tokens
+   ============================================ */
+:root {
+  --bg: #0b0f14;
+  --panel: #121821;
+  --panel-border: #1f2a37;
+  --text: #e7ecf2;
+  --muted: #8b98a5;
+  --accent-1: #6c8eff;
+  --accent-2: #9b7fff;
+  --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  --success: #3fb950;
+  --warning: #d9a544;
+  --danger: #f85149;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* subtle ambient glow behind the hero — one static radial gradient, no blur filter, cheap to paint */
+.glow {
+  position: fixed;
+  inset: -20% -20% auto -20%;
+  height: 480px;
+  background: radial-gradient(closest-side, rgba(108, 142, 255, 0.16), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.site-header {
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-grad);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark { animation: none; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.nav-link:hover { color: var(--text); }
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
+  position: relative;
+  z-index: 1;
+  padding: 64px 0 40px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-1);
+  margin-bottom: 12px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  max-width: 480px;
+  margin: 16px auto 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.board-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 6px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.board-chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+/* Style the REAL slotted ESP Web Tools button directly — functionality stays intact */
+esp-web-install-button button.flash-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent-grad);
+  color: #0b0f14;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+esp-web-install-button button.flash-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+esp-web-install-button button.flash-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
+.flash-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.unsupported-msg {
+  display: block;
+  max-width: 420px;
+  margin: 0 auto;
+  color: var(--warning);
+  font-size: 0.9rem;
+}
+
+.tutorial-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.98rem;
+  background: var(--panel);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.tutorial-btn:hover {
+  border-color: var(--accent-1);
+  background: #161f2b;
+}
+.tutorial-btn svg { width: 16px; height: 16px; }
+
+/* ============================================
+   Cards
+   ============================================ */
+.card {
+  position: relative;
+  z-index: 1;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin: 0 0 18px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.card p { color: var(--muted); margin: 0; }
+
+.muted-note { color: var(--muted); font-size: 0.88rem; }
+
+/* spec grid */
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+}
+.spec-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.spec-value { font-weight: 650; }
+
+/* steps */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.steps li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.step-num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-1);
+  padding-top: 2px;
+}
+
+/* warning card */
+.warning-card { border-color: rgba(217, 165, 68, 0.35); }
+.warning-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.warning-list strong { color: var(--warning); }
+
+/* two column */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.plain-list {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.plain-list a { color: var(--accent-1); }
+
+/* FAQ / details */
+.faq {
+  border-top: 1px solid var(--panel-border);
+  padding: 14px 0;
+}
+.faq:first-of-type { border-top: none; padding-top: 0; }
+.faq summary {
+  cursor: pointer;
+  font-weight: 650;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before {
+  content: "+";
+  display: inline-block;
+  width: 18px;
+  color: var(--accent-1);
+  font-weight: 700;
+}
+.faq[open] summary::before { content: "−"; }
+.faq p, .faq ul { margin-top: 10px; }
+
+code {
+  font-family: var(--font-mono);
+  background: rgba(108, 142, 255, 0.12);
+  color: var(--accent-1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+.code-block {
+  background: #0d1218;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text);
+}
+.code-block code { background: none; padding: 0; color: inherit; }
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  border-top: 1px solid var(--panel-border);
+  margin-top: 40px;
+  padding: 28px 0 48px;
+}
+.footer-inner { text-align: center; }
+.footer-inner p { margin: 4px 0; color: var(--muted); font-size: 0.88rem; }
+.footer-inner a { color: var(--accent-1); text-decoration: none; }
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 640px) {
+  .spec-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; gap: 20px; }
+  .card { padding: 20px; }
+  .hero { padding: 44px 0 28px; }
+}
